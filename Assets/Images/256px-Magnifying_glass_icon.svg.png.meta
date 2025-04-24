@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      256px-Magnifying_glass_icon.svg_0: 7832056194192885523
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

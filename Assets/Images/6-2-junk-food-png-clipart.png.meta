@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      6-2-junk-food-png-clipart_0: 3788630872149746082
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

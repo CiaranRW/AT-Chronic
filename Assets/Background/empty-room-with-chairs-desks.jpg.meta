@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      empty-room-with-chairs-desks_0: 1212286989734301461
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

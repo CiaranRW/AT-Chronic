@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      image-from-rawpixel-id-6169932-png_0: -6716168886127520783
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

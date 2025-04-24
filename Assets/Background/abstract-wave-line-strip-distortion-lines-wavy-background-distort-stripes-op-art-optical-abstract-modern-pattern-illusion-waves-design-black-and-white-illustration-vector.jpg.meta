@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      abstract-wave-line-strip-distortion-lines-wavy-background-distort-stripes-op-art-optical-abstract-modern-pattern-illusion-waves-design-black-and-white-illustration-vector_0: -6313860089276834118
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

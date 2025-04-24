@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      before-classic-style-dining-room-north-vancouver_0: -4420852738112120279
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
