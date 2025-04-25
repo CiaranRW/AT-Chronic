@@ -1,79 +1,87 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.SceneManagement;
 
-public class Scene02Events : MonoBehaviour
+public class Scene02Events : SceneControllerBase
 {
-    public GameObject fadein;
-    public GameObject fadeout;
-    public GameObject textBox;
-
-    private int eventPos = 0;
     private string path;
-    private AudioManager audioManager;
 
-    [SerializeField] string textToSpeak;
-    [SerializeField] int currentTextLength;
-    [SerializeField] int textLength;
-    [SerializeField] GameObject mainTextObject;
-    [SerializeField] GameObject nextButton;
-    [SerializeField] GameObject interactables;
-    private GameObject character;
+    private TMP_Text mainTextObject;
+    [SerializeField] private GameObject textBox;
+    [SerializeField] private GameObject nextButton;
 
-
-    private void Update()
+    private void Awake()
     {
-        textLength = TextCreator.charCount;
+        mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
+        DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+        //eventPos = 0;
     }
 
-    void Start()
+    protected override IEnumerator RunSceneFlow()
     {
-        audioManager = FindFirstObjectByType<AudioManager>();
-        character = GameObject.FindGameObjectWithTag("Player");
-        StartCoroutine(EventStarter());
-    }
-
-    IEnumerator EventStarter()
-    {
-        fadein.SetActive(true);
+/*        fadein.SetActive(true);
+        yield return new WaitForSeconds(1);
+        fadein.SetActive(false);
         if (GameManager.BadScore == 0 && GameManager.GoodScore == 1)
         {
-            //PP.SetActive(false);
-            StartCoroutine(NextDialogue("You feel fine as you walk through the park."));
-            yield return new WaitForSeconds(1);
+            yield return ChoseAndContinue("You feel fine as you walk through the park.");
         }
         else if (GameManager.BadScore == 1 && GameManager.GoodScore == 1)
         {
-            //PP.SetActive(true);
-            StartCoroutine(NextDialogue("Walking through the park you start to feel your heart beat."));
-            yield return new WaitForSeconds(1);
+            yield return ChoseAndContinue("Walking through the park you start to feel your heart beat.");
+        }*/
+        switch (eventPos)
+        {
+            case 0:
+                yield return ChoseAndContinue("Do you slow down and drink or continue walking to work?");
+                break;
+            case 1:
+                interChange();
+                dialogueManager.Disable();
+                //CharChange();
+                break;
+            case 2:
+                yield return HandlePathResults();
+                break;
         }
-        yield return new WaitForSeconds(1);
-        fadein.SetActive(false);
     }
 
-    IEnumerator EventOne()
+    public void ChoseRest()
     {
-        nextButton.SetActive(false);
-        StartCoroutine(NextDialogue("Do you slow down and drink or continue walking to work?"));
-        yield return new WaitForSeconds(0.5f);
+        path = "Rest";
+        charChange();
+        StartCoroutine(ChoseAndContinue("You take a short rest and drink to stay hydrated."));
     }
 
-    IEnumerator EventTwo()
+    public void ChoseWalk()
     {
-        Disable();
-        CharChange();
-        yield return new WaitForSeconds(0.5f);
+        path = "Walk";
+        charChange();
+        StartCoroutine(ChoseAndContinue("You continue walking."));
     }
-    IEnumerator EventEnd()
+
+    private IEnumerator ChoseAndContinue(string line)
     {
-        audioManager.fadeOut = true;
-        nextButton.SetActive(false);
+        bool finished = false;
+        dialogueManager.StartDialogue(line, () => finished = true);
+        yield return new WaitUntil(() => finished);
+        NextEvent();
+    }
+
+    IEnumerator ShowDialogue(string text)
+    {
+        bool finished = false;
+        dialogueManager.StartDialogue(text, () => finished = true);
+        yield return new WaitUntil(() => finished);
+    }
+
+    private IEnumerator HandlePathResults()
+    {
         fadeout.SetActive(true);
+        //audioManager.fadeOut = true;
         yield return new WaitForSeconds(2);
+
         if (path == "Walk")
         {
             GameManager.BadScore += 1;
@@ -82,63 +90,8 @@ public class Scene02Events : MonoBehaviour
         {
             GameManager.GoodScore += 1;
         }
+
         SceneManager.LoadScene(3);
-        audioManager.fadeIn = true;
-    }
-
-    public void NextButton()
-    {
-        if (eventPos == 1)
-        {
-            StartCoroutine (EventOne());
-        }
-        else if (eventPos == 2)
-        {
-            StartCoroutine(EventTwo());
-        }
-        else if (eventPos == 3)
-        {
-            StartCoroutine(EventEnd());
-        }
-    }
-
-    IEnumerator NextDialogue(string text)
-    {
-        textBox.SetActive(true);
-        character.SetActive(true);
-        textToSpeak = text;
-        mainTextObject.GetComponent<TMPro.TMP_Text>().text = textToSpeak;
-        currentTextLength = textToSpeak.Length;
-        TextCreator.runTextPrint = true;
-        yield return new WaitForSeconds(0.5f);
-        yield return new WaitUntil(() => textLength == currentTextLength);
-        nextButton.SetActive(true);
-        eventPos++;
-    }
-
-    public void CharChange()
-    {
-        interactables.SetActive(true);
-        character.SetActive(false);
-    }
-
-    public void RestInteract()
-    {
-        StartCoroutine(NextDialogue("You take a short rest and drink to stay hydrated."));
-        interactables.SetActive(false);
-        path = "Rest";
-    }
-
-    public void WalkInteract()
-    {
-        StartCoroutine(NextDialogue("You continue walking."));
-        interactables.SetActive(false);
-        path = "Walk";
-    }
-
-    public void Disable()
-    {
-        textBox.SetActive(false);
-        nextButton.SetActive(false);
+        //audioManager.fadeIn = true;
     }
 }

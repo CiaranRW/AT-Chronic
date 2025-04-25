@@ -5,12 +5,35 @@ using TMPro;
 
 public class DialogueManager : MonoBehaviour
 {
-    public GameObject textBox;
-    public GameObject nextButton;
-    public GameObject character;
-    public TMP_Text mainText;
+    public static DialogueManager Instance;
+
+    private GameObject textBox;
+    private GameObject nextButton;
+    //private GameObject character;
+    private TMP_Text mainText;
 
     private bool waitingForInput = false;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    public void Init(TMP_Text text, GameObject box, GameObject nextBtn)
+    {
+        mainText = text;
+        textBox = box;
+        nextButton = nextBtn;
+        //character = charObj;
+    }
 
     public void StartDialogue(string text, Action onComplete)
     {
@@ -20,7 +43,7 @@ public class DialogueManager : MonoBehaviour
     IEnumerator TypeText(string text, Action onComplete)
     {
         textBox.SetActive(true);
-        character.SetActive(true);
+        //character.SetActive(true);
         mainText.text = "";
 
         foreach (char c in text)

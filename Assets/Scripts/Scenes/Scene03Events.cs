@@ -1,67 +1,76 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
 
-public class Scene03Events : MonoBehaviour
+
+public class Scene03Events : SceneControllerBase
 {
-    public GameObject fadein;
-    public GameObject fadeout;
-    public GameObject textBox;
-
-    private int eventPos = 0;
     private string path;
-    private AudioManager audioManager;
 
-    [SerializeField] string textToSpeak;
-    [SerializeField] int currentTextLength;
-    [SerializeField] int textLength;
-    [SerializeField] GameObject mainTextObject;
-    [SerializeField] GameObject nextButton;
-    [SerializeField] GameObject interactables;
-    private GameObject character;
+    private TMP_Text mainTextObject;
+    [SerializeField] private GameObject textBox;
+    [SerializeField] private GameObject nextButton;
 
-    private void Update()
+    private void Awake()
     {
-        textLength = TextCreator.charCount;
+        mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
+        DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
     }
 
-    void Start()
+    protected override IEnumerator RunSceneFlow()
     {
-        audioManager = FindFirstObjectByType<AudioManager>();
-        character = GameObject.FindGameObjectWithTag("Player");
-        StartCoroutine(EventStarter());
+        //fadein.SetActive(true);
+
+        // Start dialogue based on current game score.
+        //yield return ChoseAndContinue("You get in and sit down at work.");
+
+/*        yield return new WaitForSeconds(1);
+        fadein.SetActive(false);*/
+
+        switch (eventPos)
+        {
+            case 0:
+                yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
+                break;
+            case 1:
+                dialogueManager.Disable();
+                interChange();
+                // CharChange();
+                break;
+            case 2:
+                yield return HandlePathResults();
+                break;
+        }
     }
 
-    IEnumerator EventStarter()
+    public void ChoseLow()
     {
-        fadein.SetActive(true);
-        StartCoroutine(NextDialogue("You get in and sit down at work."));
-        yield return new WaitForSeconds(1);
-        fadein.SetActive(false);
+        path = "Low";
+        charChange();
+        StartCoroutine(ChoseAndContinue("You feel more awake and can focus on your work."));
     }
 
-    IEnumerator EventOne()
+    public void ChoseHigh()
     {
-        nextButton.SetActive(false);
-        StartCoroutine(NextDialogue("You feel a bit tired, you want a caffeinated drink, Espresso or Matcha?"));
-        yield return new WaitForSeconds(0.5f);
+        path = "High";
+        charChange();
+        StartCoroutine(ChoseAndContinue("You feel more awake; however, your heart races."));
     }
 
-    IEnumerator EventTwo()
+    private IEnumerator ChoseAndContinue(string line)
     {
-        Disable();
-        CharChange();
-        yield return new WaitForSeconds(0.5f);
+        bool finished = false;
+        dialogueManager.StartDialogue(line, () => finished = true);
+        yield return new WaitUntil(() => finished);
+        NextEvent();
     }
-    IEnumerator EventEnd()
+
+    private IEnumerator HandlePathResults()
     {
-        audioManager.fadeOut = true;
-        nextButton.SetActive(false);
         fadeout.SetActive(true);
         yield return new WaitForSeconds(2);
+
         if (path == "Low")
         {
             GameManager.GoodScore += 1;
@@ -70,62 +79,7 @@ public class Scene03Events : MonoBehaviour
         {
             GameManager.BadScore += 1;
         }
+
         SceneManager.LoadScene(4);
-        audioManager.fadeIn = true;
-    }
-
-    public void NextButton()
-    {
-        if (eventPos == 1)
-        {
-            StartCoroutine (EventOne());
-        }
-        else if (eventPos == 2)
-        {
-            StartCoroutine(EventTwo());
-        }
-        else if (eventPos == 3)
-        {
-            StartCoroutine(EventEnd());
-        }
-    }
-
-    IEnumerator NextDialogue(string text)
-    {
-        textBox.SetActive(true);
-        character.SetActive(true);
-        textToSpeak = text;
-        mainTextObject.GetComponent<TMPro.TMP_Text>().text = textToSpeak;
-        currentTextLength = textToSpeak.Length;
-        TextCreator.runTextPrint = true;
-        yield return new WaitForSeconds(0.5f);
-        yield return new WaitUntil(() => textLength == currentTextLength);
-        nextButton.SetActive(true);
-        eventPos++;
-    }
-    public void CharChange()
-    {
-        interactables.SetActive(true);
-        character.SetActive(false);
-    }
-
-    public void HighInteract()
-    {
-        StartCoroutine(NextDialogue("You feel more awake however so does your heart."));
-        interactables.SetActive(false);
-        path = "High";
-    }
-
-    public void LowInteract()
-    {
-        StartCoroutine(NextDialogue("You feel more awake and can focus on your work."));
-        interactables.SetActive(false);
-        path = "Low";
-    }
-
-    public void Disable()
-    {
-        textBox.SetActive(false);
-        nextButton.SetActive(false);
     }
 }
