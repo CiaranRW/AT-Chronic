@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -16,23 +17,29 @@ public class DialogueManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
     public void Init(TMP_Text text, GameObject box, GameObject nextBtn)
     {
+    if (nextButton == null) // Only assign if it's null (avoids overwriting)
+    {
         mainText = text;
         textBox = box;
         nextButton = nextBtn;
-        //character = charObj;
+    }
+    else
+    {
+        Debug.LogWarning("DialogueManager is already initialized.");
+    }
     }
 
     public void StartDialogue(string text, Action onComplete)
@@ -70,5 +77,21 @@ public class DialogueManager : MonoBehaviour
     {
         textBox.SetActive(false);
         nextButton.SetActive(false);
+    }
+
+    public void SetupButtonListener()
+    {
+        if (nextButton != null)
+        {
+            // Clear any existing listeners to avoid duplicates
+            nextButton.GetComponent<Button>().onClick.RemoveAllListeners();
+
+            // Reattach the OnNextClicked method to the OnClick listener
+            nextButton.GetComponent<Button>().onClick.AddListener(OnNextClicked);
+        }
+        else
+        {
+            Debug.LogError("Next button is not assigned.");
+        }
     }
 }

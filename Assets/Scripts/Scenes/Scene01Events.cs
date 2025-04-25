@@ -10,30 +10,77 @@ public class Scene01Events : SceneControllerBase
     private TMP_Text mainTextObject;
     [SerializeField] private GameObject textBox;
     [SerializeField] private GameObject nextButton;
-    //[SerializeField] private GameObject character;
 
     private void Awake()
     {
-        mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
-        DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+        if (DialogueManager.Instance != null)
+        {
+            mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
+            DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+            DialogueManager.Instance.SetupButtonListener();
+        }
+        else
+        {
+            Debug.LogError("DialogueManager instance is missing!");
+        }
     }
 
     protected override IEnumerator RunSceneFlow()
     {
-        switch (eventPos)
+        if (GameManager.Instance.Scene01_Stage == 0)
         {
-            case 0:
-                yield return ShowDialogue("You’ve started walking to work, but you’re running late.");
-                NextEvent();
-                break;
-            case 1:
-                yield return ShowDialogue("Do you take your morning medicine, rush out, or go back to bed?");
-                interChange();
-                dialogueManager.Disable();
-                break;
-            case 2:
-                HandlePathResults();
-                break;
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You’ve started walking to work, but you’re running late.");
+                    break;
+                case 1:
+                    yield return ChoseAndContinue("Do you take your morning medicine, rush out, or go back to bed?");
+                    break;
+                case 2:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 3:
+                    yield return HandlePathResults();
+                    break;
+            }
+        }
+        else if (GameManager.Instance.Scene01_Stage == 1)
+        {
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
+                    break;
+                case 1:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 2:
+                    yield return HandlePathResults();
+                    break;
+
+            }
+
+        }
+        else if (GameManager.Instance.Scene01_Stage == 2)
+        {
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("Womp womp");
+                    break;
+                case 1:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 2:
+                    yield return HandlePathResults();
+                    break;
+
+            }
+
         }
     }
 
@@ -65,17 +112,15 @@ public class Scene01Events : SceneControllerBase
         yield return new WaitUntil(() => finished);
         NextEvent();
     }
-    IEnumerator ShowDialogue(string text)
-    {
-        bool finished = false;
-        dialogueManager.StartDialogue(text, () => finished = true);
-        yield return new WaitUntil(() => finished);
-    }
 
-    private void HandlePathResults()
+    private IEnumerator HandlePathResults()
     {
+        yield return new WaitForSeconds(0.5f);
+        eventPos = 0;
         if (path == "Leave" || path == "Stay")
+        {
             GameManager.BadScore += 1;
+        }
 
         if (path != "Stay")
         {
@@ -85,6 +130,7 @@ public class Scene01Events : SceneControllerBase
         else
         {
             FadeOutAndLoad(1);
+            GameManager.Instance.Scene01_Stage++;
         }
     }
 }

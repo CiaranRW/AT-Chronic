@@ -13,9 +13,22 @@ public class GameManager : MonoBehaviour
     private int currentFrame;
     private float timer;
 
+    public int Scene01_Stage = 0;
+    public int Scene02_Stage = 0;
+    public int Scene03_Stage = 0;
+    public static GameManager Instance;
+
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         Cursor.SetCursor(Cursors[1], Vector2.zero, CursorMode.Auto);
     }
 

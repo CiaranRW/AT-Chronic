@@ -28,17 +28,18 @@ public class Scene03Events : SceneControllerBase
 /*        yield return new WaitForSeconds(1);
         fadein.SetActive(false);*/
 
-        switch (eventPos)
+        switch (GameManager.Instance.Scene03_Stage)
         {
             case 0:
                 yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
-                break;
-            case 1:
                 dialogueManager.Disable();
                 interChange();
-                // CharChange();
+                yield return HandlePathResults();
                 break;
-            case 2:
+            case 1:
+                yield return ChoseAndContinue("Crazy");
+                dialogueManager.Disable();
+                interChange();
                 yield return HandlePathResults();
                 break;
         }
