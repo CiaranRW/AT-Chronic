@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
     IEnumerator ChangeScene()
     {
         yield return new WaitForSeconds(3f);
-        GameManager.BadScore = 0;
+        //GameManager.BadScore = 0;
         SceneManager.LoadScene(1);
     }
 }

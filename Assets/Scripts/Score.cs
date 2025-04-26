@@ -6,9 +6,9 @@ public class Score : MonoBehaviour
 {
     void Start()
     {
-        int test = GameManager.BadScore;
+        int test = GameManager.PatientHealth;
         string test2 = test.ToString();
-        gameObject.GetComponent<TMPro.TMP_Text>().text = test2 + " Bad Choices";
+        gameObject.GetComponent<TMPro.TMP_Text>().text = "You were rushed to hospital after your health decreased.";
     }
 
 }

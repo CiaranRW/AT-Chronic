@@ -20,30 +20,21 @@ public class Scene02Events : SceneControllerBase
 
     protected override IEnumerator RunSceneFlow()
     {
-/*        fadein.SetActive(true);
-        yield return new WaitForSeconds(1);
-        fadein.SetActive(false);
-        if (GameManager.BadScore == 0 && GameManager.GoodScore == 1)
+        if (GameManager.Instance.Scene01_Stage == 0)
         {
-            yield return ChoseAndContinue("You feel fine as you walk through the park.");
-        }
-        else if (GameManager.BadScore == 1 && GameManager.GoodScore == 1)
-        {
-            yield return ChoseAndContinue("Walking through the park you start to feel your heart beat.");
-        }*/
-        switch (eventPos)
-        {
-            case 0:
-                yield return ChoseAndContinue("Do you slow down and drink or continue walking to work?");
-                break;
-            case 1:
-                interChange();
-                dialogueManager.Disable();
-                //CharChange();
-                break;
-            case 2:
-                yield return HandlePathResults();
-                break;
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("Do you slow down and drink or continue walking to work?");
+                    break;
+                case 1:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 2:
+                    yield return HandlePathResults();
+                    break;
+            }
         }
     }
 
@@ -79,19 +70,17 @@ public class Scene02Events : SceneControllerBase
     private IEnumerator HandlePathResults()
     {
         fadeout.SetActive(true);
-        //audioManager.fadeOut = true;
         yield return new WaitForSeconds(2);
 
         if (path == "Walk")
         {
-            GameManager.BadScore += 1;
+            GameManager.MajorBadChoice();
         }
         else if (path == "Rest")
         {
-            GameManager.GoodScore += 1;
+            GameManager.MinorGoodChoice();
         }
 
         SceneManager.LoadScene(3);
-        //audioManager.fadeIn = true;
     }
 }

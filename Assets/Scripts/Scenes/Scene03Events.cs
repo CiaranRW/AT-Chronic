@@ -20,30 +20,42 @@ public class Scene03Events : SceneControllerBase
 
     protected override IEnumerator RunSceneFlow()
     {
-        //fadein.SetActive(true);
-
-        // Start dialogue based on current game score.
-        //yield return ChoseAndContinue("You get in and sit down at work.");
-
-/*        yield return new WaitForSeconds(1);
-        fadein.SetActive(false);*/
-
-        switch (GameManager.Instance.Scene03_Stage)
+        if (GameManager.Instance.Scene03_Stage == 0)
         {
-            case 0:
-                yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
-                dialogueManager.Disable();
-                interChange();
-                yield return HandlePathResults();
-                break;
-            case 1:
-                yield return ChoseAndContinue("Crazy");
-                dialogueManager.Disable();
-                interChange();
-                yield return HandlePathResults();
-                break;
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
+                    break;
+                case 1:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 2:
+                    yield return HandlePathResults();
+                    break;
+            }
+        }
+        else if (GameManager.Instance.Scene03_Stage == 1)
+        {
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You have another chance of making this right, do you take the medicine, drive to work or stay in bed?");
+                    break;
+                case 1:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 2:
+                    yield return HandlePathResults();
+                    break;
+
+            }
+
         }
     }
+
 
     public void ChoseLow()
     {
@@ -74,11 +86,11 @@ public class Scene03Events : SceneControllerBase
 
         if (path == "Low")
         {
-            GameManager.GoodScore += 1;
+            GameManager.MinorGoodChoice();
         }
         else if (path == "High")
         {
-            GameManager.BadScore += 1;
+            GameManager.MinorBadChoice();
         }
 
         SceneManager.LoadScene(4);

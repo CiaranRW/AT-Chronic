@@ -3,14 +3,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Scene01Events : SceneControllerBase
+public class Scene01_NightEvents : SceneControllerBase
 {
     private string path;
 
     private TMP_Text mainTextObject;
     [SerializeField] private GameObject textBox;
     [SerializeField] private GameObject nextButton;
-    [SerializeField] private GameObject X;
+    //[SerializeField] private GameObject X;
 
     private void Awake()
     {
@@ -28,15 +28,15 @@ public class Scene01Events : SceneControllerBase
 
     protected override IEnumerator RunSceneFlow()
     {
-        if (GameManager.Instance.Scene01_Stage == 0)
+        if (GameManager.PatientHealth <= 40)
         {
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You’ve started walking to work, but you’re running late.");
+                    yield return ChoseAndContinue("You dont feel great tonight.");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("Do you take your morning medicine, rush out, or go back to bed?");
+                    yield return ChoseAndContinue("Do you take your nightly medicine, or go straight to bed?");
                     break;
                 case 2:
                     dialogueManager.Disable();
@@ -47,42 +47,25 @@ public class Scene01Events : SceneControllerBase
                     break;
             }
         }
-        else if (GameManager.Instance.Scene01_Stage == 1)
+        else if (GameManager.PatientHealth > 40)
         {
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You have another chance of making this right, do you take the medicine, drive to work or stay in bed?");
+                    yield return ChoseAndContinue("You  feel great tonight.");
                     break;
                 case 1:
+                    yield return ChoseAndContinue("Do you take your nightly medicine, or go straight to bed?");
+                    break;
+                case 2:
                     dialogueManager.Disable();
                     interChange();
                     break;
-                case 2:
+                case 3:
                     yield return HandlePathResults();
                     break;
 
             }
-
-        }
-        else if (GameManager.Instance.Scene01_Stage >= 2)
-        {
-            switch (eventPos)
-            {
-                case 0:
-                    yield return ChoseAndContinue("Womp womp");
-                    break;
-                case 1:
-                    X.SetActive(true);
-                    dialogueManager.Disable();
-                    interChange();
-                    break;
-                case 2:
-                    yield return HandlePathResults();
-                    break;
-
-            }
-
         }
     }
 
@@ -90,23 +73,15 @@ public class Scene01Events : SceneControllerBase
     {
         path = "Medicine";
         charChange();
-        X.SetActive(false);
-        StartCoroutine(ChoseAndContinue("You take your morning medicine."));
-    }
-
-    public void ChoseLeave()
-    {
-        path = "Leave";
-        charChange();
-        X.SetActive(false);
-        StartCoroutine(ChoseAndContinue("You left in a hurry."));
+        //X.SetActive(false);
+        StartCoroutine(ChoseAndContinue("You take your nightly medicine."));
     }
 
     public void ChoseSleep()
     {
         path = "Stay";
         charChange();
-        X.SetActive(false);
+        //X.SetActive(false);
         StartCoroutine(ChoseAndContinue("You sleep in."));
     }
 
@@ -125,25 +100,12 @@ public class Scene01Events : SceneControllerBase
         eventPos = 0;
         if (path == "Stay")
         {
-            FadeOutAndLoad(1);
-            GameManager.Instance.Scene01_Stage++;
             GameManager.MajorBadChoice();
         }
-        else if (path == "Medicine")
+        if (path == "Medicine")
         {
             GameManager.MajorGoodChoice();
         }
-        else
-        {
-            GameManager.MinorBadChoice();
-        }
-        if (path != "Stay" && GameManager.Instance.Scene01_Stage == 0)
-        {
-            FadeOutAndLoad(2);
-        }
-        else if (path != "Stay" && GameManager.Instance.Scene01_Stage > 0)
-        {
-            FadeOutAndLoad(3);
-        }
+        FadeOutAndLoad(1);
     }
 }

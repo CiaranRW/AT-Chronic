@@ -9,7 +9,7 @@ public class AudioManager : MonoBehaviour
     private int personalScore = 0;
     public AudioClip sixtyBPM;
     public AudioClip eightyBPM;
-    public float fadeDuration = 2f;
+    public float fadeDuration = 0.5f;
     public bool fadeIn;
     public bool fadeOut;
     private GameObject HeartBeat;
@@ -23,54 +23,70 @@ public class AudioManager : MonoBehaviour
         HeartBeat.SetActive(false);
     }
 
+    private bool isChangingAudio = false;
+
     private void Update()
     {
-        if (fadeIn == true)
+        if (GameManager.PatientHealth != personalScore && !isChangingAudio)
         {
-            FadeIn();
-            fadeIn = false;
-            BGM.Play();
-        }
-        if (fadeOut == true)
-        {
-            FadeOut();
-            fadeOut = false;
-        }
-        if (GameManager.BadScore == personalScore)
-        {
-            AudioSource HeartbeatSound = HeartBeat.GetComponent<AudioSource>();
-            if (GameManager.BadScore == 0)
-            {
-                BGM.clip = sixtyBPM;
-            }
-            else if (GameManager.BadScore == 1)
-            {
-                HeartBeat.SetActive(true);
-                HeartbeatSound.volume = 0.2f;
-            }
-            else if (GameManager.BadScore == 2)
-            {
-                HeartbeatSound.volume = 0.5f;
-                HeartbeatSound.pitch = 1.2f;
-                BGM.clip = eightyBPM;
-            }
-            else if (GameManager.BadScore == 3)
-            {
-                HeartbeatSound.volume = 0.8f;
-                HeartbeatSound.pitch = 1.5f;
-                BGM.clip = eightyBPM;
-            }
-            BGM.Play();
-            personalScore++;
+            StartCoroutine(ChangeAudioRoutine());
         }
     }
-    public void FadeIn()
+
+    private IEnumerator ChangeAudioRoutine()
     {
-        StartCoroutine(FadeAudio(0f, 0.7f, fadeDuration));
+        isChangingAudio = true;
+
+        AudioClip newClip = BGM.clip;
+        AudioSource HeartbeatSound = HeartBeat.GetComponent<AudioSource>();
+
+        if (GameManager.PatientHealth >= 50)
+        {
+            newClip = sixtyBPM;
+            HeartBeat.SetActive(false);
+        }
+        else if (GameManager.PatientHealth <= 40 && GameManager.PatientHealth > 30)
+        {
+            HeartBeat.SetActive(true);
+            HeartbeatSound.volume = 0.2f;
+        }
+        else if (GameManager.PatientHealth <= 30 && GameManager.PatientHealth > 20)
+        {
+            HeartBeat.SetActive(true);
+            HeartbeatSound.volume = 0.5f;
+            HeartbeatSound.pitch = 1.2f;
+            newClip = eightyBPM;
+        }
+        else if (GameManager.PatientHealth <= 20 && GameManager.PatientHealth > 10)
+        {
+            HeartBeat.SetActive(true);
+            HeartbeatSound.volume = 0.8f;
+            HeartbeatSound.pitch = 1.5f;
+            newClip = eightyBPM;
+        }
+
+        if (NeedsMusicChange(newClip))
+        {
+            yield return FadeAudio(BGM.volume, 0f, fadeDuration);
+
+            BGM.clip = newClip;
+            BGM.Play();
+
+            yield return FadeAudio(0f, 0.7f, fadeDuration);
+        }
+        else if (!BGM.isPlaying)
+        {
+            BGM.Play();
+        }
+
+
+        personalScore = GameManager.PatientHealth;
+        isChangingAudio = false;
     }
-    public void FadeOut()
+
+    private bool NeedsMusicChange(AudioClip newClip)
     {
-        StartCoroutine(FadeAudio(0.7f, 0f, fadeDuration));
+        return BGM.clip != newClip;
     }
 
     IEnumerator FadeAudio(float startVolume, float endVolume, float duration)
@@ -85,9 +101,7 @@ public class AudioManager : MonoBehaviour
 
             yield return null;
         }
-
         BGM.volume = endVolume;
-
     }
 
 }

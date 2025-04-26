@@ -16,15 +16,15 @@ public class PlayerManager : MonoBehaviour
     {
         if (player != null)
         {
-            if (GameManager.BadScore == 1)
+            if (GameManager.PatientHealth < 40)
             {
                 SetColourByHex("#dbfcc7");
             }
-            else if (GameManager.BadScore == 2)
+            else if (GameManager.PatientHealth < 30)
             {
                 SetColourByHex("#C2FFA8");
             }
-            else if (GameManager.BadScore == 3)
+            else if (GameManager.PatientHealth < 20)
             {
                 player.color = Color.green;
             }

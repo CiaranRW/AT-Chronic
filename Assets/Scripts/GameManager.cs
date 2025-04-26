@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static int BadScore = -1;
-    public static int GoodScore = 0;
+    //public static int BadScore = -1;
+    //public static int GoodScore = 0;
     //private int personalScore = 0;
+    public static int PatientHealth = 50;
     public GameObject PP;
 
     [SerializeField] Texture2D[] Cursors;
@@ -16,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int Scene01_Stage = 0;
     public int Scene02_Stage = 0;
     public int Scene03_Stage = 0;
+    public int Scene04_Stage = 0;
     public static GameManager Instance;
 
     void Awake()
@@ -34,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     { 
-        if (BadScore >= 1)
+        if (PatientHealth < 50)
         {
             timer -= Time.deltaTime;
             if (timer <= 0f)
@@ -44,18 +47,49 @@ public class GameManager : MonoBehaviour
                 Cursor.SetCursor(Cursors[currentFrame], Vector2.zero, CursorMode.Auto);
             }
         }
-        if (BadScore == 2)
+        if (PatientHealth < 30)
         {
             PP.SetActive(true);
             frameRate = 0.5f;
             //personalScore = 2;
         }
-        if (BadScore == 3)
+        if (PatientHealth < 20)
         {
             FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
             frameRate = 0.2f;
             //personalScore = 3;
         }
+        if (PatientHealth <= 0)
+        {
+            SceneManager.LoadScene("EndScene");
+        }
+        else
+        {
+            PP.SetActive(false);
+            frameRate = 1f;
+        }
+        
+    }
+
+
+    public static void MinorGoodChoice()
+    {
+        PatientHealth = Mathf.Min(PatientHealth + 5, 100);
+    }
+
+    public static void MajorGoodChoice()
+    {
+        PatientHealth = Mathf.Min(PatientHealth + 15, 100);
+    }
+
+    public static void MinorBadChoice()
+    {
+        PatientHealth = Mathf.Max(PatientHealth - 5, 0);
+    }
+
+    public static void MajorBadChoice()
+    {
+        PatientHealth = Mathf.Max(PatientHealth - 20, 0);
     }
 
 
