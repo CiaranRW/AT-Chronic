@@ -6,9 +6,14 @@ public class Score : MonoBehaviour
 {
     void Start()
     {
-        int test = GameManager.PatientHealth;
-        string test2 = test.ToString();
-        gameObject.GetComponent<TMPro.TMP_Text>().text = "You were rushed to hospital after your health decreased.";
+        if (GameManager.PatientHealth >= 100)
+        {
+            gameObject.GetComponent<TMPro.TMP_Text>().text = "You are feeling better keep up the good Work!.";
+        }
+        if (GameManager.PatientHealth <= 0)
+        {
+            gameObject.GetComponent<TMPro.TMP_Text>().text = "You were rushed to hospital after your health decreased.";
+        }
     }
 
 }

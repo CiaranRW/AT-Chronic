@@ -3,9 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //public static int BadScore = -1;
-    //public static int GoodScore = 0;
-    //private int personalScore = 0;
     public static int PatientHealth = 50;
     public GameObject PP;
 
@@ -51,15 +48,17 @@ public class GameManager : MonoBehaviour
         {
             PP.SetActive(true);
             frameRate = 0.5f;
-            //personalScore = 2;
         }
         if (PatientHealth < 20)
         {
             FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
             frameRate = 0.2f;
-            //personalScore = 3;
         }
         if (PatientHealth <= 0)
+        {
+            SceneManager.LoadScene("EndScene");
+        }
+        if (PatientHealth >= 100)
         {
             SceneManager.LoadScene("EndScene");
         }
