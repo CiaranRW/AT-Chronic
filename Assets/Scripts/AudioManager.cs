@@ -40,12 +40,12 @@ public class AudioManager : MonoBehaviour
         AudioClip newClip = BGM.clip;
         AudioSource HeartbeatSound = HeartBeat.GetComponent<AudioSource>();
 
-        if (GameManager.PatientHealth >= 50)
+        if (GameManager.PatientHealth >= 60)
         {
             newClip = sixtyBPM;
             HeartBeat.SetActive(false);
         }
-        else if (GameManager.PatientHealth <= 40 && GameManager.PatientHealth > 30)
+        else if (GameManager.PatientHealth <= 50 && GameManager.PatientHealth > 30)
         {
             HeartBeat.SetActive(true);
             HeartbeatSound.volume = 0.2f;

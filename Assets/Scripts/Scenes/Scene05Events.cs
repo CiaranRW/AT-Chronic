@@ -72,6 +72,6 @@ public class Scene05Events : SceneControllerBase
             GameManager.MajorBadChoice();
         }
 
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 }

@@ -9,11 +9,18 @@ public class HeartCursor : MonoBehaviour
     private Image heartImage;
     private Image heartOutline;
 
-    private float beatScale = 0.2f;
     private float beatSpeed = 2f;
     private Vector3 originalScale;
 
-    private int maxHealth = 100; // adjust if your system changes
+    private float reverseChance = 2f;
+    private int maxHealth = 100;
+
+    private Vector2 previousMousePosition;
+    private RectTransform heartRectTransform;
+
+    private float reverseTime = 2f;
+    private float reverseTimer = 0f;
+    private bool isReversing = false;
 
     private void Awake()
     {
@@ -21,38 +28,55 @@ public class HeartCursor : MonoBehaviour
     }
     private void Start()
     {
-        Cursor.visible = false;
         originalScale = heartImage.transform.localScale;
+        heartRectTransform = heartOutline.GetComponent<RectTransform>();
     }
 
     private void Update()
     {
-        FollowMouse();
+        FollowMouseWithRandomDirection();
         AnimateBeat();
         UpdateFill();
+        
     }
 
-    void FollowMouse()
+    private void FollowMouseWithRandomDirection()
     {
-        if (canvas == null || uiCamera == null || heartImage == null) return; // safety check
+        if (canvas == null || uiCamera == null || heartImage == null) return;
 
-        Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvas.transform as RectTransform,
-            Input.mousePosition,
-            uiCamera,
-            out localPoint);
+        Vector2 currentMousePosition = Input.mousePosition;
+        Vector2 movementDirection = currentMousePosition - previousMousePosition;
 
-        heartOutline.rectTransform.localPosition = localPoint;
+        if (isReversing)
+        {
+            movementDirection = -movementDirection;
+            reverseTimer -= Time.deltaTime;
+
+            if (reverseTimer <= 0f)
+            {
+                isReversing = false;
+                reverseTimer = 0f;
+            }
+        }
+        else
+        {
+            int randomValue = Random.Range(1, 10001);
+            if (reverseTimer <= 0f && randomValue < reverseChance)
+            {
+                isReversing = true;
+                reverseTimer = reverseTime;
+            }
+        }
+
+        heartRectTransform.localPosition += (Vector3)movementDirection;
+
+        previousMousePosition = currentMousePosition;
     }
 
     void AnimateBeat()
     {
-        float scale = 1f + Mathf.Sin(Time.time * beatSpeed) * 0.1f;
-
-        // Adjust the heartbeat scale based on patient health
-        float healthFactor = Mathf.Clamp01((float)GameManager.PatientHealth / maxHealth); // Value between 0 and 1
-        heartOutline.transform.localScale = originalScale * (scale * healthFactor); // Scale the heartbeat based on health
+        float scale = 0.5f + Mathf.Sin(Time.time * beatSpeed) * 0.1f;
+        heartOutline.transform.localScale = originalScale * scale;
     }
 
     void UpdateFill()
@@ -60,7 +84,7 @@ public class HeartCursor : MonoBehaviour
         float healthPercent = (float)GameManager.PatientHealth / maxHealth;
         heartImage.fillAmount = Mathf.Clamp01(healthPercent);
 
-        beatSpeed = Mathf.Lerp(1f, 5f, 1 - healthPercent);
+        beatSpeed = Mathf.Lerp(1f, 20f, 1 - healthPercent);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -79,7 +103,6 @@ public class HeartCursor : MonoBehaviour
     }
     private void OnDestroy()
     {
-        // unsubscribe when this object gets destroyed
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
