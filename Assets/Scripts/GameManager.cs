@@ -3,14 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static int PatientHealth = 70;
+    public static int PatientHealth = 60;
     public GameObject PP;
-
-    //[SerializeField] Texture2D[] Cursors;
-    //[SerializeField] int frameCount;
-    //private float frameRate = 1f;
-    //private int currentFrame;
-    //private float timer;
 
     public int Scene01_Stage = 0;
     public int Scene02_Stage = 0;
@@ -42,6 +36,7 @@ public class GameManager : MonoBehaviour
         if (PatientHealth < 30)
         {
             FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
+            PP.SetActive(true);
         }
         if (PatientHealth <= 0)
         {
@@ -51,7 +46,7 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("EndScene");
         }
-        else
+        else if (PatientHealth > 50)
         {
             PP.SetActive(false);
         }
@@ -63,17 +58,14 @@ public class GameManager : MonoBehaviour
     {
         PatientHealth = Mathf.Min(PatientHealth + 5, 100);
     }
-
     public static void MajorGoodChoice()
     {
         PatientHealth = Mathf.Min(PatientHealth + 10, 100);
     }
-
     public static void MinorBadChoice()
     {
         PatientHealth = Mathf.Max(PatientHealth - 5, 0);
     }
-
     public static void MajorBadChoice()
     {
         PatientHealth = Mathf.Max(PatientHealth - 20, 0);

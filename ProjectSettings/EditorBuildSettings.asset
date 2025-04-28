@@ -18,11 +18,11 @@ EditorBuildSettings:
     path: Assets/Scenes/WorkScene01.unity
     guid: 17d3db4b707cd4d409895f10665ccfc0
   - enabled: 1
-    path: Assets/Scenes/BedroomScene01_Night.unity
-    guid: df99349cd5fcc4240b6f22b65f0f7b33
-  - enabled: 1
     path: Assets/Scenes/DiningRoomScene01.unity
     guid: 2e65e717608bac841a45e0be004da292
+  - enabled: 1
+    path: Assets/Scenes/BedroomScene01_Night.unity
+    guid: df99349cd5fcc4240b6f22b65f0f7b33
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: bd26f8669ecabd344bfc007e27fb737e

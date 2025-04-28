@@ -133,10 +133,6 @@ public class Scene01Events : SceneControllerBase
         {
             GameManager.MajorGoodChoice();
         }
-        else
-        {
-            GameManager.MinorBadChoice();
-        }
         if (path != "Stay" && GameManager.Instance.Scene01_Stage == 0)
         {
             FadeOutAndLoad(2);

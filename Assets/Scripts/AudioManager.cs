@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class AudioManager : MonoBehaviour
     public bool fadeIn;
     public bool fadeOut;
     private GameObject HeartBeat;
-
 
     void Awake()
     {
@@ -27,7 +27,9 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.PatientHealth != personalScore && !isChangingAudio)
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if (currentSceneIndex != 0 && GameManager.PatientHealth != personalScore && !isChangingAudio)
         {
             StartCoroutine(ChangeAudioRoutine());
         }

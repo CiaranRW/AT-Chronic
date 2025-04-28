@@ -12,65 +12,100 @@ public class HeartCursor : MonoBehaviour
     private float beatSpeed = 2f;
     private Vector3 originalScale;
 
-    private float reverseChance = 2f;
+    private float reverseChance = 1f;
     private int maxHealth = 100;
 
     private Vector2 previousMousePosition;
     private RectTransform heartRectTransform;
 
-    private float reverseTime = 2f;
+    private float reverseTime = 0.5f;
     private float reverseTimer = 0f;
     private bool isReversing = false;
+
+    private float resetAfterDriftTime = 0.5f;
+    private float driftTimer = 0f;
+    private bool drifting = true;
+
+    private bool isReady = false;
 
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-    private void Start()
-    {
-        originalScale = heartImage.transform.localScale;
-        heartRectTransform = heartOutline.GetComponent<RectTransform>();
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void Update()
     {
+        if (!isReady)
+            return;
+
+
         FollowMouseWithRandomDirection();
         AnimateBeat();
         UpdateFill();
-        
+
+        if (drifting)
+        {
+            driftTimer -= Time.deltaTime;
+            if (driftTimer <= 0f)
+            {
+                ResetHeartToMouse();
+                drifting = false;
+            }
+        }
     }
 
     private void FollowMouseWithRandomDirection()
     {
-        if (canvas == null || uiCamera == null || heartImage == null) return;
+        if (canvas == null || uiCamera == null || heartImage == null || heartRectTransform == null)
+            return;
+        Vector2 mousePosition = Input.mousePosition;
+        Vector2 anchoredPos;
 
-        Vector2 currentMousePosition = Input.mousePosition;
-        Vector2 movementDirection = currentMousePosition - previousMousePosition;
-
-        if (isReversing)
+        // Convert screen position to local canvas position
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.transform as RectTransform, mousePosition, uiCamera, out anchoredPos))
         {
-            movementDirection = -movementDirection;
-            reverseTimer -= Time.deltaTime;
+            Vector2 movementDirection = anchoredPos - previousMousePosition;
 
-            if (reverseTimer <= 0f)
+            if (isReversing)
             {
-                isReversing = false;
-                reverseTimer = 0f;
+                movementDirection = -movementDirection;
+                reverseTimer -= Time.deltaTime;
+
+                if (reverseTimer <= 0f)
+                {
+                    isReversing = false;
+                    reverseTimer = 0f;
+                }
             }
-        }
-        else
-        {
-            int randomValue = Random.Range(1, 10001);
-            if (reverseTimer <= 0f && randomValue < reverseChance)
+            else
             {
-                isReversing = true;
-                reverseTimer = reverseTime;
+                int randomValue = Random.Range(1, 10001); // Random value between 1 and 10000
+                if (reverseTimer <= 0f && randomValue <= (30 - GameManager.PatientHealth) + reverseChance)
+                {
+                    isReversing = true;
+                    reverseTimer = reverseTime;
+
+                    drifting = true;
+                    driftTimer = resetAfterDriftTime;
+                }
             }
+
+            heartRectTransform.anchoredPosition += movementDirection;
+            previousMousePosition = anchoredPos;
         }
+    }
+    private void ResetHeartToMouse()
+    {
+        Vector2 mousePosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.transform as RectTransform,
+            Input.mousePosition,
+            uiCamera,
+            out mousePosition);
 
-        heartRectTransform.localPosition += (Vector3)movementDirection;
-
-        previousMousePosition = currentMousePosition;
+        heartRectTransform.localPosition = mousePosition;
     }
 
     void AnimateBeat()
@@ -94,11 +129,23 @@ public class HeartCursor : MonoBehaviour
 
         HeartCursorGraphic foundHeart = FindFirstObjectByType<HeartCursorGraphic>();
         HeartOutline foundOutline = FindFirstObjectByType<HeartOutline>();
-        if (foundHeart != null)
+
+        if (foundHeart != null && foundOutline != null)
         {
             heartImage = foundHeart.GetComponent<Image>();
             heartOutline = foundOutline.GetComponent<Image>();
+            heartRectTransform = heartOutline.GetComponent<RectTransform>();
             originalScale = heartImage.transform.localScale;
+            ResetHeartToMouse();
+            isReady = true;
+
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+        else
+        {
+            isReady = false;
+
+            Cursor.lockState = CursorLockMode.None;
         }
     }
     private void OnDestroy()
