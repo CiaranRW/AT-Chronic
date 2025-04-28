@@ -143,7 +143,7 @@ public class Scene01Events : SceneControllerBase
         }
         else if (path != "Stay" && GameManager.Instance.Scene01_Stage > 0)
         {
-            FadeOutAndLoad(3);
+            SceneManager.LoadScene("CarScene01");
         }
     }
 }

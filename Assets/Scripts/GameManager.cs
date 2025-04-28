@@ -6,11 +6,11 @@ public class GameManager : MonoBehaviour
     public static int PatientHealth = 50;
     public GameObject PP;
 
-    [SerializeField] Texture2D[] Cursors;
-    [SerializeField] int frameCount;
-    private float frameRate = 1f;
-    private int currentFrame;
-    private float timer;
+    //[SerializeField] Texture2D[] Cursors;
+    //[SerializeField] int frameCount;
+    //private float frameRate = 1f;
+    //private int currentFrame;
+    //private float timer;
 
     public int Scene01_Stage = 0;
     public int Scene02_Stage = 0;
@@ -29,12 +29,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        Cursor.SetCursor(Cursors[1], Vector2.zero, CursorMode.Auto);
+        //Cursor.SetCursor(Cursors[1], Vector2.zero, CursorMode.Auto);
     }
 
     private void Update()
     { 
-        if (PatientHealth < 50)
+/*        if (PatientHealth < 50)
         {
             timer -= Time.deltaTime;
             if (timer <= 0f)
@@ -43,16 +43,16 @@ public class GameManager : MonoBehaviour
                 currentFrame = (currentFrame + 1) % Cursors.Length;
                 Cursor.SetCursor(Cursors[currentFrame], Vector2.zero, CursorMode.Auto);
             }
-        }
+        }*/
         if (PatientHealth < 30)
         {
             PP.SetActive(true);
-            frameRate = 0.5f;
+            //frameRate = 0.5f;
         }
         if (PatientHealth < 20)
         {
             FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
-            frameRate = 0.2f;
+            //frameRate = 0.2f;
         }
         if (PatientHealth <= 0)
         {
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         else
         {
             PP.SetActive(false);
-            frameRate = 1f;
+            //frameRate = 1f;
         }
         
     }
