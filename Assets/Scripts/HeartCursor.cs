@@ -62,7 +62,6 @@ public class HeartCursor : MonoBehaviour
         Vector2 mousePosition = Input.mousePosition;
         Vector2 anchoredPos;
 
-        // Convert screen position to local canvas position
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvas.transform as RectTransform, mousePosition, uiCamera, out anchoredPos))
         {
@@ -81,15 +80,18 @@ public class HeartCursor : MonoBehaviour
             }
             else
             {
-                int randomValue = Random.Range(1, 10001); // Random value between 1 and 10000
-                if (reverseTimer <= 0f && randomValue <= (30 - GameManager.PatientHealth) + reverseChance)
+                if (SceneManager.GetActiveScene().name != "EndScene")
                 {
-                    isReversing = true;
-                    reverseTimer = reverseTime;
+                    int randomValue = Random.Range(1, 10001);
+                    if (reverseTimer <= 0f && randomValue <= (30 - GameManager.PatientHealth) + reverseChance)
+                    {
+                        isReversing = true;
+                        reverseTimer = reverseTime;
 
-                    drifting = true;
-                    driftTimer = resetAfterDriftTime;
-                }
+                        drifting = true;
+                        driftTimer = resetAfterDriftTime;
+                    }
+                }    
             }
 
             heartRectTransform.anchoredPosition += movementDirection;

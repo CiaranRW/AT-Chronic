@@ -19,6 +19,7 @@ public class Scene01_NightEvents : SceneControllerBase
             mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
             DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
             DialogueManager.Instance.SetupButtonListener();
+            Cursor.visible = false;
         }
         else
         {
@@ -52,7 +53,7 @@ public class Scene01_NightEvents : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You  feel great tonight.");
+                    yield return ChoseAndContinue("You feel great tonight.");
                     break;
                 case 1:
                     yield return ChoseAndContinue("Do you take your nightly medicine, or go straight to bed?");

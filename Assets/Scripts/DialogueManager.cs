@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class DialogueManager : MonoBehaviour
 
     public void Init(TMP_Text text, GameObject box, GameObject nextBtn)
     {
-    if (nextButton == null) // Only assign if it's null (avoids overwriting)
+    if (nextButton == null)
     {
         mainText = text;
         textBox = box;
@@ -44,6 +45,19 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string text, Action onComplete)
     {
+        if (SceneManager.GetActiveScene().name == "EndScene")
+        {
+            onComplete?.Invoke();
+            return;
+        }
+
+        if (mainText == null || textBox == null || nextButton == null)
+        {
+            Debug.LogWarning("DialogueManager is not fully initialized.");
+            onComplete?.Invoke();
+            return;
+        }
+
         StartCoroutine(TypeText(text, onComplete));
     }
 
@@ -83,10 +97,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (nextButton != null)
         {
-            // Clear any existing listeners to avoid duplicates
             nextButton.GetComponent<Button>().onClick.RemoveAllListeners();
-
-            // Reattach the OnNextClicked method to the OnClick listener
             nextButton.GetComponent<Button>().onClick.AddListener(OnNextClicked);
         }
         else

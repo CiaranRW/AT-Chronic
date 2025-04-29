@@ -11,32 +11,57 @@ public class Scene05Events : SceneControllerBase
     private TMP_Text mainTextObject;
     [SerializeField] private GameObject textBox;
     [SerializeField] private GameObject nextButton;
+    [SerializeField] private GameObject X;
 
     private void Awake()
     {
         mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
         DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+        Cursor.visible = false;
     }
 
     protected override IEnumerator RunSceneFlow()
     {
-        switch (eventPos)
+        if (GameManager.Instance.Scene05_Stage == 0)
         {
-            case 0:
-                yield return ChoseAndContinue("You drive to work instead");
-                break;
-            case 1:
-                yield return ChoseAndContinue("Do you smoke a cigarette or not?");
-                break;
-            case 2:
-                dialogueManager.Disable();
-                interChange();
-                break;
-            case 3:
-                yield return HandlePathResults();
-                break;
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You drive to work instead");
+                    break;
+                case 1:
+                    yield return ChoseAndContinue("Do you smoke a cigarette or not?");
+                    break;
+                case 2:
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 3:
+                    yield return HandlePathResults();
+                    break;
+            }
         }
-        
+        if (GameManager.Instance.Scene05_Stage == 1)
+        {
+            switch (eventPos)
+            {
+                case 0:
+                    yield return ChoseAndContinue("You drive to work again");
+                    break;
+                case 1:
+                    yield return ChoseAndContinue("You can't resist the urge to smoke again");
+                    break;
+                case 2:
+                    X.SetActive(true);
+                    dialogueManager.Disable();
+                    interChange();
+                    break;
+                case 3:
+                    yield return HandlePathResults();
+                    break;
+            }
+
+        }
     }
 
 
@@ -51,6 +76,7 @@ public class Scene05Events : SceneControllerBase
     public void SmokeInteract()
     {
         path = "Smoke";
+        X.SetActive(false);
         charChange();
         StartCoroutine(ChoseAndContinue("You smoke."));
     }
@@ -70,6 +96,7 @@ public class Scene05Events : SceneControllerBase
         if (path == "Smoke")
         {
             GameManager.MajorBadChoice();
+            GameManager.Instance.Scene05_Stage += 1;
         }
 
         SceneManager.LoadScene(3);

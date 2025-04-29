@@ -16,6 +16,7 @@ public class Scene04Events : SceneControllerBase
     {
         mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
         DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+        Cursor.visible = false;
     }
 
     protected override IEnumerator RunSceneFlow()

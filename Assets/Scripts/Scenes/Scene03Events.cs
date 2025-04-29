@@ -16,6 +16,7 @@ public class Scene03Events : SceneControllerBase
     {
         mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
         DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
+        Cursor.visible = false;
     }
 
     protected override IEnumerator RunSceneFlow()
@@ -25,7 +26,7 @@ public class Scene03Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Espresso or Matcha?");
+                    yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Coffee or Water?");
                     break;
                 case 1:
                     dialogueManager.Disable();
@@ -35,31 +36,13 @@ public class Scene03Events : SceneControllerBase
                     yield return HandlePathResults();
                     break;
             }
-        }
-        else if (GameManager.Instance.Scene03_Stage == 1)
-        {
-            switch (eventPos)
-            {
-                case 0:
-                    yield return ChoseAndContinue("You have another chance of making this right, do you take the medicine, drive to work or stay in bed?");
-                    break;
-                case 1:
-                    dialogueManager.Disable();
-                    interChange();
-                    break;
-                case 2:
-                    yield return HandlePathResults();
-                    break;
-
-            }
-
         }
     }
 
 
-    public void ChoseLow()
+    public void ChoseWater()
     {
-        path = "Low";
+        path = "Water";
         charChange();
         StartCoroutine(ChoseAndContinue("You feel more awake and can focus on your work."));
     }
@@ -84,7 +67,7 @@ public class Scene03Events : SceneControllerBase
         fadeout.SetActive(true);
         yield return new WaitForSeconds(2);
 
-        if (path == "Low")
+        if (path == "Water")
         {
             GameManager.MinorGoodChoice();
         }

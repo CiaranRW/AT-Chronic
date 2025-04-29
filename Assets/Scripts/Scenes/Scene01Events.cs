@@ -19,6 +19,7 @@ public class Scene01Events : SceneControllerBase
             mainTextObject = textBox.GetComponentInChildren<TMP_Text>();
             DialogueManager.Instance.Init(mainTextObject, textBox, nextButton);
             DialogueManager.Instance.SetupButtonListener();
+            Cursor.visible = false;
         }
         else
         {
@@ -70,7 +71,7 @@ public class Scene01Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("Womp womp");
+                    yield return ChoseAndContinue("You are feeling terrible and refuse to take the medicine any longer");
                     break;
                 case 1:
                     X.SetActive(true);

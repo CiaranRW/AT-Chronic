@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public int Scene02_Stage = 0;
     public int Scene03_Stage = 0;
     public int Scene04_Stage = 0;
+    public int Scene05_Stage = 0;
     public static GameManager Instance;
 
     void Awake()
@@ -28,27 +29,30 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update()
-    { 
-        if (PatientHealth < 50)
+    {
+        if (SceneManager.GetActiveScene().name != "EndScene")
         {
-            PP.SetActive(true);
-        }
-        if (PatientHealth < 30)
-        {
-            FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
-            PP.SetActive(true);
-        }
-        if (PatientHealth <= 0)
-        {
-            SceneManager.LoadScene("EndScene");
-        }
-        if (PatientHealth >= 100)
-        {
-            SceneManager.LoadScene("EndScene");
-        }
-        else if (PatientHealth > 50)
-        {
-            PP.SetActive(false);
+            if (PatientHealth < 50)
+            {
+                PP.SetActive(true);
+            }
+            if (PatientHealth < 30)
+            {
+                FindFirstObjectByType<DizzyEffect>().ShowDizzyEffect();
+                PP.SetActive(true);
+            }
+            if (PatientHealth <= 0)
+            {
+                SceneManager.LoadScene("EndScene");
+            }
+            if (PatientHealth >= 100)
+            {
+                SceneManager.LoadScene("EndScene");
+            }
+            else if (PatientHealth > 50)
+            {
+                PP.SetActive(false);
+            }
         }
         
     }

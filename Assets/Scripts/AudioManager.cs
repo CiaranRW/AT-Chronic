@@ -6,8 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance;
+
     private AudioSource BGM;
     private int personalScore = 0;
+    public AudioClip menu;
     public AudioClip sixtyBPM;
     public AudioClip eightyBPM;
     public float fadeDuration = 0.5f;
@@ -17,6 +20,16 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
         DontDestroyOnLoad(gameObject);
         BGM = gameObject.GetComponentInChildren<AudioSource>();
         HeartBeat = GameObject.FindGameObjectWithTag("HeartBeat");
@@ -29,13 +42,24 @@ public class AudioManager : MonoBehaviour
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        if (currentSceneIndex != 0 && GameManager.PatientHealth != personalScore && !isChangingAudio)
+        if (currentSceneIndex != 0 && currentSceneIndex != 6 && GameManager.PatientHealth != personalScore && !isChangingAudio)
         {
             StartCoroutine(ChangeAudioRoutine());
         }
     }
 
-    private IEnumerator ChangeAudioRoutine()
+    public void PlayMenuMusic()
+    {
+        if (BGM != null)
+        {
+            BGM.clip = menu;
+            BGM.Play();
+            personalScore = 0;
+        }
+    }
+
+
+private IEnumerator ChangeAudioRoutine()
     {
         isChangingAudio = true;
 
@@ -66,6 +90,8 @@ public class AudioManager : MonoBehaviour
             HeartbeatSound.pitch = 1.5f;
             newClip = eightyBPM;
         }
+        
+
 
         if (NeedsMusicChange(newClip))
         {

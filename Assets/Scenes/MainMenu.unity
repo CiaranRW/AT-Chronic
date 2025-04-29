@@ -947,6 +947,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7077f6177f0389c4f8219b235f783ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 8300000, guid: 67a368dcbf02c4a43bafdc3c7cf894e1, type: 3}
   sixtyBPM: {fileID: 8300000, guid: 7255c9cf2e6ef4c40a3292bed5f0797b, type: 3}
   eightyBPM: {fileID: 8300000, guid: 7fcb7e22cb0307b4ea400b7b57808acf, type: 3}
   fadeDuration: 2
