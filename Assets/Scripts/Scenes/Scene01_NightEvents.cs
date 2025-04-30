@@ -34,10 +34,10 @@ public class Scene01_NightEvents : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You dont feel great tonight.");
+                    yield return ChoseAndContinue("You're not feeling great tonight.");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("Do you take your nightly medicine, or go straight to bed?");
+                    yield return ChoseAndContinue("Do you try and get back to a routine and take your medicine, or skip it just this once and head straight to bed?");
                     break;
                 case 2:
                     dialogueManager.Disable();
@@ -53,10 +53,10 @@ public class Scene01_NightEvents : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You feel great tonight.");
+                    yield return ChoseAndContinue("You feel surprisingly good—almost too good to bother with your routine.");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("Do you take your nightly medicine, or go straight to bed?");
+                    yield return ChoseAndContinue("Do you stick to your routine and take your medicine, or skip it just this once and head straight to bed?");
                     break;
                 case 2:
                     dialogueManager.Disable();
@@ -75,7 +75,7 @@ public class Scene01_NightEvents : SceneControllerBase
         path = "Medicine";
         charChange();
         //X.SetActive(false);
-        StartCoroutine(ChoseAndContinue("You take your nightly medicine."));
+        StartCoroutine(ChoseAndContinue("You take the pill, hoping tomorrow feels better."));
     }
 
     public void ChoseSleep()
@@ -83,7 +83,7 @@ public class Scene01_NightEvents : SceneControllerBase
         path = "Stay";
         charChange();
         //X.SetActive(false);
-        StartCoroutine(ChoseAndContinue("You sleep in."));
+        StartCoroutine(ChoseAndContinue("You ignore the medicine and drift off, telling yourself it’s just one night."));
     }
 
     private IEnumerator ChoseAndContinue(string line)

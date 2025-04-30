@@ -27,10 +27,10 @@ public class Scene05Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You drive to work instead");
+                    yield return ChoseAndContinue("You decide to drive to work instead of walking.");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("Do you smoke a cigarette or not?");
+                    yield return ChoseAndContinue("Do you give in and smoke a cigarette?");
                     break;
                 case 2:
                     dialogueManager.Disable();
@@ -49,7 +49,7 @@ public class Scene05Events : SceneControllerBase
                     yield return ChoseAndContinue("You drive to work again");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("You can't resist the urge to smoke again");
+                    yield return ChoseAndContinue("You give in to the craving and smoke again.");
                     break;
                 case 2:
                     X.SetActive(true);
@@ -78,14 +78,14 @@ public class Scene05Events : SceneControllerBase
         path = "Smoke";
         X.SetActive(false);
         charChange();
-        StartCoroutine(ChoseAndContinue("You smoke."));
+        StartCoroutine(ChoseAndContinue("You light a cigarette and take a drag."));
     }
 
     public void ContinueInteract()
     {
         path = "Continue";
         charChange();
-        StartCoroutine(ChoseAndContinue("You continue driving to work resisting the urge to smoke."));
+        StartCoroutine(ChoseAndContinue("You keep driving, pushing through the craving."));
     }
     private IEnumerator HandlePathResults()
     {

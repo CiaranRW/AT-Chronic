@@ -53,7 +53,7 @@ public class Scene01Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You have another chance of making this right, do you take the medicine, drive to work or stay in bed?");
+                    yield return ChoseAndContinue("You have another chance to make this right. Do you take your medicine, drive to work, or stay in bed?");
                     break;
                 case 1:
                     dialogueManager.Disable();
@@ -71,7 +71,7 @@ public class Scene01Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You are feeling terrible and refuse to take the medicine any longer");
+                    yield return ChoseAndContinue("You're feeling terrible and refuse to take the medicine any longer.");
                     break;
                 case 1:
                     X.SetActive(true);

@@ -25,7 +25,7 @@ public class Scene02Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("Do you slow down and drink or continue walking to work?");
+                    yield return ChoseAndContinue("Do you slow down for a drink, or keep walking to work?");
                     break;
                 case 1:
                     dialogueManager.Disable();
@@ -42,7 +42,7 @@ public class Scene02Events : SceneControllerBase
     {
         path = "Rest";
         charChange();
-        StartCoroutine(ChoseAndContinue("You take a short rest and drink to stay hydrated."));
+        StartCoroutine(ChoseAndContinue("You take a short rest and have a drink to stay hydrated."));
     }
 
     public void ChoseWalk()

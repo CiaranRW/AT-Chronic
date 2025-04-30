@@ -26,7 +26,7 @@ public class Scene03Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You feel a bit tired. Do you want a caffeinated drink? Coffee or Water?");
+                    yield return ChoseAndContinue("You feel a bit tired. Would you like a caffeinated drink—coffee or water?");
                     break;
                 case 1:
                     dialogueManager.Disable();
@@ -51,7 +51,7 @@ public class Scene03Events : SceneControllerBase
     {
         path = "High";
         charChange();
-        StartCoroutine(ChoseAndContinue("You feel more awake; however, your heart races."));
+        StartCoroutine(ChoseAndContinue("You feel more awake, but your heart begins to race."));
     }
 
     private IEnumerator ChoseAndContinue(string line)

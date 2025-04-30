@@ -26,10 +26,10 @@ public class Scene04Events : SceneControllerBase
             switch (eventPos)
             {
                 case 0:
-                    yield return ChoseAndContinue("You get home after a long day.");
+                    yield return ChoseAndContinue("You finally get home after a long day.");
                     break;
                 case 1:
-                    yield return ChoseAndContinue("It is time for dinner, do you cook a healthy meal or order junk food?");
+                    yield return ChoseAndContinue("It’s dinner time. Do you cook a healthy meal or order junk food?");
                     break;
                 case 2:
                     dialogueManager.Disable();
@@ -55,14 +55,14 @@ public class Scene04Events : SceneControllerBase
     {
         path = "Good";
         charChange();
-        StartCoroutine(ChoseAndContinue("You managed to cook yourself a healthy meal and feel better."));
+        StartCoroutine(ChoseAndContinue("You cook a healthy meal and feel better for it."));
     }
 
     public void BadInteract()
     {
         path = "Bad";
         charChange();
-        StartCoroutine(ChoseAndContinue("You had a big unhealthy meal which felt nice in the moment but now not so great."));
+        StartCoroutine(ChoseAndContinue("You eat a big unhealthy meal. It felt good at the time, but now you’re not feeling so great."));
     }
     private IEnumerator HandlePathResults()
     {
