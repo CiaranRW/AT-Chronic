@@ -2026,6 +2026,7 @@ MonoBehaviour:
   Scene02_Stage: 0
   Scene03_Stage: 0
   Scene04_Stage: 0
+  Scene05_Stage: 0
 --- !u!4 &1836623782
 Transform:
   m_ObjectHideFlags: 0
